@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhD Defense Assistant - Fixed Version</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        .user-input {
+            font-family: 'Tajawal', sans-serif;
+            color: #4f46e5;  /* Indigo-600 */
+            font-weight: 700;
+            background-color: #eef2ff;  /* Indigo-50 */
+            padding: 0.1em 0.3em;
+            border-radius: 0.25em;
+        }
+
+        .prompt-text {
+            white-space: pre-wrap;
+            font-family: 'Tajawal', sans-serif;
+            line-height: 1.6;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .status-message {
+            transition: all 0.3s ease;
+        }
+        
+        .tool-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .tab-button.active {
+            background-color: #4f46e5;
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+    <!-- Home Page -->
+    <div id="homePage" class="page active">
+        <div class="gradient-bg min-h-screen flex items-center justify-center p-4">
+            <div class="max-w-4xl mx-auto text-center text-white fade-in">
+                <h1 class="text-5xl font-bold mb-4">
+                    <i class="fas fa-graduation-cap mr-4"></i>
+                    PhD Defense Assistant
+                </h1>
+                <p class="text-xl mb-8 opacity-90">Generate professional defense speeches and PowerPoint presentations</p>
+                <p class="text-lg mb-12 opacity-80">Designed and developed by Mr. May Abdelghani</p>
+                
+                <div class="grid md:grid-cols-2 gap-8 mt-12">
+                    <!-- Speech Generator Card -->
+                    <div class="tool-card bg-white rounded-xl p-8 text-gray-800 cursor-pointer" onclick="showToolPage('speech')">
+                        <div class="text-6xl text-blue-500 mb-6">
+                            <i class="fas fa-microphone"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">Speech Generator</h3>
+                        <p class="text-gray-600 mb-6">Create comprehensive oral defense speeches to accompany your PowerPoint presentation with clear sections, smooth transitions, and academic rigor.</p>
+                        <div class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg inline-block">
+                            <i class="fas fa-arrow-right mr-2"></i>
+                            Get Started
+                        </div>
+                    </div>
+                    
+                    <!-- Presentation Generator Card -->
+                    <div class="tool-card bg-white rounded-xl p-8 text-gray-800 cursor-pointer" onclick="showToolPage('presentation')">
+                        <div class="text-6xl text-green-500 mb-6">
+                            <i class="fas fa-presentation"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">Presentation Generator</h3>
+                        <p class="text-gray-600 mb-6">Generate PowerPoint presentation prompts based on your completed defense speech with instructions for building slides that perfectly match your oral presentation.</p>
+                        <div class="bg-green-100 text-green-800 px-4 py-2 rounded-lg inline-block">
+                            <i class="fas fa-arrow-right mr-2"></i>
+                            Get Started
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Speech Generator Page -->
+    <div id="speechPage" class="page" style="display: none;">
+        <div class="min-h-screen bg-gray-50">
+            <!-- Header -->
+            <div class="bg-white shadow-sm border-b">
+                <div class="max-w-6xl mx-auto px-4 py-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <button onclick="showHomePage()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg mr-4 transition-colors">
+                                <i class="fas fa-home mr-2"></i>HOME
+                            </button>
+                            <h1 class="text-2xl font-bold text-gray-800">
+                                <i class="fas fa-microphone mr-2 text-blue-500"></i>
+                                Speech Generator
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Language Tabs -->
+            <div class="max-w-6xl mx-auto px-4 py-6">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <div class="border-b">
+                        <nav class="flex">
+                            <button class="tab-button px-6 py-3 font-medium text-gray-600 hover:bg-gray-50 border-b-2 border-transparent active" onclick="showSpeechTab('english')">
+                                <i class="fas fa-flag-usa mr-2"></i>English
+                            </button>
+                            <button class="tab-button px-6 py-3 font-medium text-gray-600 hover:bg-gray-50 border-b-2 border-transparent" onclick="showSpeechTab('french')">
+                                <i class="fas fa-flag mr-2"></i>Français
+                            </button>
+                        </nav>
+                    </div>
+                    
+                    <!-- English Speech Tab -->
+                    <div id="speechEnglishTab" class="tab-content active p-6">
+                        <div class="mb-8">
+                            <h3 class="text-lg font-semibold mb-4">About the Speech Generator</h3>
+                            <p class="text-gray-600 mb-4">Create a comprehensive oral defense speech to accompany your PowerPoint presentation. This tool helps you structure your defense with clear sections, smooth transitions, and academic rigor.</p>
+                            
+                            <h4 class="font-semibold mb-2">How to Use:</h4>
+                            <ol class="list-decimal list-inside text-gray-600 space-y-1">
+                                <li>Enter your dissertation title and field of specialization</li>
+                                <li>Add any specific notes or instructions</li>
+                                <li>Click "Generate Speech" to create your customized defense script</li>
+                                <li>Copy the result to use with your presentation</li>
+                            </ol>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Dissertation Title:</label>
+                                <input type="text" id="speechTitleEn" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your dissertation title...">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Field of Specialization:</label>
+                                <input type="text" id="speechFieldEn" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your field of specialization...">
+                            </div>
+                            
+
+                            <button onclick="generateSpeechPrompt('english')" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                                <i class="fas fa-magic mr-2"></i>Generate Speech
+                            </button>
+                            
+                            <div id="speechStatusEn" class="status-message"></div>
+                            
+                            <div id="speechResultEn" style="display: none;" class="bg-gray-50 border rounded-lg p-4">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h4 class="font-semibold">Generated Defense Speech</h4>
+                                    <div class="space-x-2">
+                                        <button onclick="copySpeechPrompt('english')" class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm transition-colors">
+                                            <i class="fas fa-copy mr-1"></i>Copy
+                                        </button>
+                                        <button onclick="showHomePage()" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition-colors">
+                                            <i class="fas fa-home mr-1"></i>Home
+                                        </button>
+                                        <button onclick="resetSpeechPrompt('english')" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors">
+                                            <i class="fas fa-trash mr-1"></i>Reset
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="speechOutputEn" class="w-full h-64 px-3 py-2 border border-gray-300 rounded-md bg-white overflow-auto"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- French Speech Tab -->
+                    <div id="speechFrenchTab" class="tab-content p-6">
+                        <div class="mb-8">
+                            <h3 class="text-lg font-semibold mb-4">À propos du Générateur de Discours</h3>
+                            <p class="text-gray-600 mb-4">Créez un discours de soutenance orale complet pour accompagner votre présentation PowerPoint. Cet outil vous aide à structurer votre défense avec des sections claires, des transitions fluides et une rigueur académique.</p>
+                            
+                            <h4 class="font-semibold mb-2">Comment utiliser :</h4>
+                            <ol class="list-decimal list-inside text-gray-600 space-y-1">
+                                <li>Entrez le titre de votre thèse et votre domaine de spécialisation</li>
+                                <li>Ajoutez des notes ou instructions spécifiques</li>
+                                <li>Cliquez sur "Générer le Discours" pour créer votre script de défense personnalisé</li>
+                                <li>Copiez le résultat pour l'utiliser avec votre présentation</li>
+                            </ol>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Titre de la Thèse:</label>
+                                <input type="text" id="speechTitleFr" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Entrez le titre de votre thèse...">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Domaine de Spécialisation:</label>
+                                <input type="text" id="speechFieldFr" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Entrez votre domaine de spécialisation...">
+                            </div>
+                            
+
+                            <button onclick="generateSpeechPrompt('french')" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                                <i class="fas fa-magic mr-2"></i>Générer le Discours
+                            </button>
+                            
+                            <div id="speechStatusFr" class="status-message"></div>
+                            
+                            <div id="speechResultFr" style="display: none;" class="bg-gray-50 border rounded-lg p-4">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h4 class="font-semibold">Discours de Défense Généré</h4>
+                                    <div class="space-x-2">
+                                        <button onclick="copySpeechPrompt('french')" class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm transition-colors">
+                                            <i class="fas fa-copy mr-1"></i>Copier
+                                        </button>
+                                        <button onclick="showHomePage()" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition-colors">
+                                            <i class="fas fa-home mr-1"></i>Accueil
+                                        </button>
+                                        <button onclick="resetSpeechPrompt('french')" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors">
+                                            <i class="fas fa-trash mr-1"></i>Réinitialiser
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="speechOutputFr" class="w-full h-64 px-3 py-2 border border-gray-300 rounded-md bg-white overflow-auto"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Presentation Generator Page -->
+    <div id="presentationPage" class="page" style="display: none;">
+        <div class="min-h-screen bg-gray-50">
+            <!-- Header -->
+            <div class="bg-white shadow-sm border-b">
+                <div class="max-w-6xl mx-auto px-4 py-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <button onclick="showHomePage()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg mr-4 transition-colors">
+                                <i class="fas fa-home mr-2"></i>HOME
+                            </button>
+                            <h1 class="text-2xl font-bold text-gray-800">
+                                <i class="fas fa-presentation mr-2 text-green-500"></i>
+                                Presentation Generator
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Language Tabs -->
+            <div class="max-w-6xl mx-auto px-4 py-6">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <div class="border-b">
+                        <nav class="flex">
+                            <button class="tab-button px-6 py-3 font-medium text-gray-600 hover:bg-gray-50 border-b-2 border-transparent active" onclick="showPresentationTab('english')">
+                                <i class="fas fa-flag-usa mr-2"></i>English
+                            </button>
+                            <button class="tab-button px-6 py-3 font-medium text-gray-600 hover:bg-gray-50 border-b-2 border-transparent" onclick="showPresentationTab('french')">
+                                <i class="fas fa-flag mr-2"></i>Français
+                            </button>
+                        </nav>
+                    </div>
+                    
+                    <!-- English Presentation Tab -->
+                    <div id="presentationEnglishTab" class="tab-content active p-6">
+                        <div class="mb-8">
+                            <h3 class="text-lg font-semibold mb-4">About the Presentation Generator</h3>
+                            <p class="text-gray-600 mb-4">Generate a PowerPoint presentation prompt based on your completed defense speech. This tool creates instructions for building slides that perfectly match your oral presentation.</p>
+                            
+                            <h4 class="font-semibold mb-2">How to Use:</h4>
+                            <ol class="list-decimal list-inside text-gray-600 space-y-1">
+                                <li>Upload your completed defense speech file</li>
+                                <li>Add any specific notes for the PowerPoint design</li>
+                                <li>Click "Generate PowerPoint Prompt" to create the instructions</li>
+                                <li>Copy the result to use with your AI assistant</li>
+                            </ol>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Speech File:</label>
+                                <input type="file" id="presentationFileEn" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" accept=".txt,.doc,.docx,.pdf">
+                                <div class="text-sm text-gray-500 mt-1">
+                                    <span id="presentationFileStatusEn">No file selected</span>
+                                </div>
+                            </div>
+                            
+
+                            <button onclick="generatePresentationPrompt('english')" class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                                <i class="fas fa-magic mr-2"></i>Generate PowerPoint Prompt
+                            </button>
+                            
+                            <div id="presentationStatusEn" class="status-message"></div>
+                            
+                            <div id="presentationResultEn" style="display: none;" class="bg-gray-50 border rounded-lg p-4">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h4 class="font-semibold">Generated PowerPoint Prompt</h4>
+                                    <div class="space-x-2">
+                                        <button onclick="copyPresentationPrompt('english')" class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm transition-colors">
+                                            <i class="fas fa-copy mr-1"></i>Copy
+                                        </button>
+                                        <button onclick="showHomePage()" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition-colors">
+                                            <i class="fas fa-home mr-1"></i>Home
+                                        </button>
+                                        <button onclick="resetPresentationPrompt('english')" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors">
+                                            <i class="fas fa-trash mr-1"></i>Reset
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="presentationOutputEn" class="w-full h-64 px-3 py-2 border border-gray-300 rounded-md bg-white overflow-auto"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- French Presentation Tab -->
+                    <div id="presentationFrenchTab" class="tab-content p-6">
+                        <div class="mb-8">
+                            <h3 class="text-lg font-semibold mb-4">À propos du Générateur de Présentation</h3>
+                            <p class="text-gray-600 mb-4">Générez une invite de présentation PowerPoint basée sur votre discours de défense terminé. Cet outil crée des instructions pour construire des diapositives qui correspondent parfaitement à votre présentation orale.</p>
+                            
+                            <h4 class="font-semibold mb-2">Comment utiliser :</h4>
+                            <ol class="list-decimal list-inside text-gray-600 space-y-1">
+                                <li>Téléchargez votre fichier de discours de défense terminé</li>
+                                <li>Ajoutez des notes spécifiques pour la conception PowerPoint</li>
+                                <li>Cliquez sur "Générer l'Invite PowerPoint" pour créer les instructions</li>
+                                <li>Copiez le résultat pour l'utiliser avec votre assistant IA</li>
+                            </ol>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Fichier du Discours:</label>
+                                <input type="file" id="presentationFileFr" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" accept=".txt,.doc,.docx,.pdf">
+                                <div class="text-sm text-gray-500 mt-1">
+                                    <span id="presentationFileStatusFr">Aucun fichier sélectionné</span>
+                                </div>
+                            </div>
+                            
+
+                            <button onclick="generatePresentationPrompt('french')" class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                                <i class="fas fa-magic mr-2"></i>Générer l'Invite PowerPoint
+                            </button>
+                            
+                            <div id="presentationStatusFr" class="status-message"></div>
+                            
+                            <div id="presentationResultFr" style="display: none;" class="bg-gray-50 border rounded-lg p-4">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h4 class="font-semibold">Invite PowerPoint Générée</h4>
+                                    <div class="space-x-2">
+                                        <button onclick="copyPresentationPrompt('french')" class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm transition-colors">
+                                            <i class="fas fa-copy mr-1"></i>Copier
+                                        </button>
+                                        <button onclick="showHomePage()" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition-colors">
+                                            <i class="fas fa-home mr-1"></i>Accueil
+                                        </button>
+                                        <button onclick="resetPresentationPrompt('french')" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors">
+                                            <i class="fas fa-trash mr-1"></i>Réinitialiser
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="presentationOutputFr" class="w-full h-64 px-3 py-2 border border-gray-300 rounded-md bg-white overflow-auto"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Speech Templates
+        const speechTemplates = {
+            english: `Act like an expert in scientific communication and academic speech writing, specializing in preparing impactful, clear, and persuasive oral defenses for PhD dissertations. You are known for crafting compelling and structured presentations tailored to academic juries, turning complex research into engaging and understandable narratives.
+
+Objective: Based on my PhD dissertation titled "{{TITLE}}", in the field of "{{FIELD}}", your task is to create a comprehensive oral defense speech to accompany each PowerPoint slide of the presentation.
+Follow these steps:
+1. For each chapter or major section of the dissertation:
+   - Analyze the content and extract the essential ideas.
+   - Break it down into logical slides based on conventional defense structures.
+
+2. For each slide, provide:
+   -📌 Slide content: a bullet-point list summarizing the key ideas, experimental results, essential data, and partial conclusions.
+   -🗣️ Associated speech: a fluent, academic, and persuasive script that elaborates on the bullet points and explains the scientific reasoning clearly and confidently.
+   -🔁 Slide transition: a transitional sentence to ensure smooth logical flow between sections.
+
+3. At the end of each chapter or section:
+   - Ask me whether I want to proceed to the next section or make edits before continuing.
+
+Expected output format:
+--------------------------------------
+Slide X: [Slide title]
+📌 Slide content:
+• Key idea 1
+• Key idea 2
+• Key idea 3
+• Partial conclusion
+🗣️ Associated speech:
+Fluent and structured academic text expanding on each bullet point with clarity, scientific rigor, and rhetorical engagement.
+🔁 Transition:
+Transition sentence to the next slide or topic.
+
+Work with rigor, clarity, and attention to detail. Maintain an academic tone while ensuring accessibility. Be methodical and highly precise at each step.`,
+
+            french: `Agis comme un expert en communication scientifique, spécialisé dans la rédaction de discours académiques pour les soutenances de thèse. Tu es reconnu pour ta capacité à transformer des thèses complexes en discours fluides, structurés et convaincants, adaptés à un jury académique. Ton style oral est clair, rigoureux, captivant, et parfaitement adapté au format académique.
+
+Objectif : À partir de ma thèse de doctorat intitulée "{{TITLE}}" dans le domaine suivant : {{FIELD}}, ta mission est de créer un discours complet de soutenance qui accompagne chaque diapositive de la présentation PowerPoint.
+
+Procède selon les étapes suivantes :
+1. Pour chaque chapitre ou section de la thèse :
+   - Analyse le contenu du chapitre pour en extraire les points clés.
+   - Découpe ce contenu en plusieurs diapositives logiques selon la structure habituelle d'une soutenance.
+
+2. Pour chaque diapositive, fournis :
+   - 📌 Contenu affiché sur la diapositive : une synthèse des éléments clés sous forme de liste à puces (idées principales, résultats, données expérimentales, conclusion partielle).
+   - 🗣️ Discours oral associé : un texte rédigé de manière fluide, académique, convaincante, qui explique les points de la diapositive avec rigueur et engagement.
+   - 🔁 Transition vers la diapositive suivante : une phrase de transition logique qui assure la fluidité du discours.
+
+3. À la fin de chaque chapitre ou grande section :
+   - Demande-moi si je souhaite continuer avec la section suivante, ou apporter des ajustements avant de poursuivre.
+
+Format de sortie attendu :
+--------------------------------------
+Diapositive X : [Titre de la diapositive]
+📌 Contenu affiché sur la diapositive :
+• Point clé 1
+• Point clé 2
+• Point clé 2
+• Conclusion partielle
+🗣️ Discours oral associé :
+Texte fluide du discours expliquant chaque élément affiché, avec clarté, rigueur scientifique et engagement oratoire.
+🔁 Transition :
+Phrase de transition vers la prochaine section.
+
+Travaille de manière rigoureuse, structurée et détaillée. Utilise un ton académique soutenu, mais accessible. Sois méthodique et pertinent à chaque étape.`
+        };
+
+        // Presentation Templates
+        const presentationTemplates = {
+            english: `Carefully read the attached file titled: {{FILENAME}}.
+
+{{NOTES}}
+
+This document contains the full speech for a PhD thesis defense, including:
+
+1. The content that should appear on each slide (titles, bullet points, figures, diagrams, etc.),
+2. As well as the spoken script that accompanies each slide, intended for oral delivery to the jury.
+
+Your task is to create a complete PowerPoint presentation (.pptx format) based on the information in this file.
+
+For each slide:
+1. Include only the visual and textual content meant to be displayed on screen (titles, bullet points, tables, spectra, reaction schemes, figure placeholders, etc.).
+2. Ignore the spoken script, unless it contains technical or factual details (e.g., specific data or figure descriptions) that are not explicitly listed in the "slide content" sections.
+3. If a figure or diagram is mentioned (e.g., "Figure 14: UV-Vis spectrum"), insert a placeholder or a labeled space in the slide so that it can be added later.
+4. Keep a clear and professional layout, with one title per slide, clean bullet points, and neutral color tones suitable for academic presentations.
+5. The presentation should include all slides listed in the document, from the title page to the acknowledgements, in the same order.
+
+Once complete, export the result as a PowerPoint (.pptx) file.`,
+
+            french: `Lisez attentivement le fichier joint intitulé: {{FILENAME}}
+
+{{NOTES}}
+
+Ce document contient le discours complet de la soutenance de thèse de doctorat, y compris :
+
+1. Le contenu qui doit apparaître sur chaque diapositive (titres, puces, figures, schémas, etc.),
+2. Ainsi que le script oral qui accompagne chaque diapositive, destiné à la présentation devant le jury.
+
+Votre tâche consiste à créer une présentation PowerPoint complète (au format .pptx) à partir des informations contenues dans ce fichier.
+
+Pour chaque diapositive :
+1. Incluez uniquement le contenu visuel et textuel destiné à être affiché à l'écran (titres, points clés, tableaux, spectres, schémas réactionnels, espaces réservés aux figures, etc.).
+2. Ignorez le script oral, sauf s'il contient des détails techniques ou factuels (par exemple : données spécifiques ou descriptions de figures) qui ne sont pas explicitement listés dans les sections « contenu de la diapositive ».
+3. Si une figure ou un schéma est mentionné (par exemple : « Figure 14 : spectre UV-Vis »), insérez un espace réservé ou un emplacement légendé dans la diapositive afin qu'il puisse être ajouté ultérieurement.
+4. Gardez une mise en page claire et professionnelle, avec un seul titre par diapositive, des puces bien structurées et des tons neutres adaptés à une présentation académique.
+5. La présentation doit inclure toutes les diapositives listées dans le document, de la page de titre jusqu'aux remerciements, dans le même ordre.
+
+Une fois la présentation terminée, exportez le résultat au format PowerPoint (.pptx)..`
+        };
+
+        // Navigation Functions
+        function showHomePage() {
+            document.querySelectorAll('.page').forEach(page => page.style.display = 'none');
+            document.getElementById('homePage').style.display = 'block';
+        }
+
+        function showToolPage(tool) {
+            document.querySelectorAll('.page').forEach(page => page.style.display = 'none');
+            if (tool === 'speech') {
+                document.getElementById('speechPage').style.display = 'block';
+            } else if (tool === 'presentation') {
+                document.getElementById('presentationPage').style.display = 'block';
+            }
+        }
+
+        function showSpeechTab(language) {
+            // Update tab buttons
+            document.querySelectorAll('#speechPage .tab-button').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Show/hide tab content
+            document.querySelectorAll('#speechPage .tab-content').forEach(content => content.classList.remove('active'));
+            if (language === 'english') {
+                document.getElementById('speechEnglishTab').classList.add('active');
+            } else {
+                document.getElementById('speechFrenchTab').classList.add('active');
+            }
+        }
+
+        function showPresentationTab(language) {
+            // Update tab buttons
+            document.querySelectorAll('#presentationPage .tab-button').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Show/hide tab content
+            document.querySelectorAll('#presentationPage .tab-content').forEach(content => content.classList.remove('active'));
+            if (language === 'english') {
+                document.getElementById('presentationEnglishTab').classList.add('active');
+            } else {
+                document.getElementById('presentationFrenchTab').classList.add('active');
+            }
+        }
+
+        // Utility Functions
+        function updateCharCount(textareaId, countId) {
+            const textarea = document.getElementById(textareaId);
+            const counter = document.getElementById(countId);
+            counter.textContent = textarea.value.length;
+        }
+
+        function showStatus(statusId, message, type = 'info') {
+            const statusElement = document.getElementById(statusId);
+            const colors = {
+                success: 'text-green-600 bg-green-100 border-green-200',
+                error: 'text-red-600 bg-red-100 border-red-200',
+                info: 'text-blue-600 bg-blue-100 border-blue-200'
+            };
+            
+            statusElement.className = `status-message p-3 rounded-lg border ${colors[type]}`;
+            statusElement.textContent = message;
+            statusElement.style.display = 'block';
+            
+            setTimeout(() => {
+                statusElement.style.display = 'none';
+            }, 4000);
+        }
+
+        // Speech Generation Functions
+        function generateSpeechPrompt(language) {
+            const suffix = language === 'english' ? 'En' : 'Fr';
+            const title = document.getElementById(`speechTitle${suffix}`).value.trim();
+            const field = document.getElementById(`speechField${suffix}`).value.trim();
+            
+            if (!title || !field) {
+                const message = language === 'english' 
+                    ? 'Please fill in both the dissertation title and field of specialization.'
+                    : 'Veuillez remplir le titre de la thèse et le domaine de spécialisation.';
+                showStatus(`speechStatus${suffix}`, message, 'error');
+                return;
+            }
+            
+            let template = speechTemplates[language];
+            const styledTitle = `<span class="user-input">${title}</span>`;
+            const styledField = `<span class="user-input">${field}</span>`;
+            
+            template = template.replace('{{TITLE}}', styledTitle);
+            template = template.replace('{{FIELD}}', styledField);
+            template = template.replace('{{NOTES}}', '');
+            
+            const outputElement = document.getElementById(`speechOutput${suffix}`);
+            outputElement.innerHTML = `<div class="prompt-text">${template}</div>`;
+            document.getElementById(`speechResult${suffix}`).style.display = 'block';
+            
+            const message = language === 'english'
+                ? 'Speech prompt generated successfully!'
+                : 'Invite de discours générée avec succès !';
+            showStatus(`speechStatus${suffix}`, message, 'success');
+        }
+
+        function copySpeechPrompt(language) {
+            const suffix = language === 'english' ? 'En' : 'Fr';
+            const output = document.getElementById(`speechOutput${suffix}`);
+            const range = document.createRange();
+            range.selectNode(output);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+            
+            const message = language === 'english'
+                ? 'Speech prompt copied to clipboard!'
+                : 'Invite de discours copiée dans le presse-papiers !';
+            showStatus(`speechStatus${suffix}`, message, 'success');
+        }
+
+        function resetSpeechPrompt(language) {
+            const suffix = language === 'english' ? 'En' : 'Fr';
+            document.getElementById(`speechOutput${suffix}`).innerHTML = '';
+            document.getElementById(`speechResult${suffix}`).style.display = 'none';
+            
+            const message = language === 'english'
+                ? 'Speech prompt reset successfully!'
+                : 'Invite de discours réinitialisée avec succès !';
+            showStatus(`speechStatus${suffix}`, message, 'success');
+        }
+
+        // Presentation Generation Functions
+        function generatePresentationPrompt(language) {
+            const suffix = language === 'english' ? 'En' : 'Fr';
+            const fileInput = document.getElementById(`presentationFile${suffix}`);
+            
+            if (!fileInput.files.length) {
+                const message = language === 'english'
+                    ? 'Please select a speech file before generating the presentation prompt.'
+                    : 'Veuillez sélectionner un fichier de discours avant de générer \'invite de présentation.';
+                showStatus(`presentationStatus${suffix}`, message, 'error');
+                return;
+            }
+            
+            const filename = fileInput.files[0].name;
+            let template = presentationTemplates[language];
+            const styledFilename = `<span class="user-input">${filename}</span>`;
+            
+            template = template.replace('{{FILENAME}}', styledFilename);
+            template = template.replace('{{NOTES}}', '');
+            
+            const outputElement = document.getElementById(`presentationOutput${suffix}`);
+            outputElement.innerHTML = `<div class="prompt-text">${template}</div>`;
+            document.getElementById(`presentationResult${suffix}`).style.display = 'block';
+            
+            const message = language === 'english'
+                ? 'PowerPoint prompt generated successfully!'
+                : 'Invite PowerPoint générée avec succès !';
+            showStatus(`presentationStatus${suffix}`, message, 'success');
+        }
+
+        function copyPresentationPrompt(language) {
+            const suffix = language === 'english' ? 'En' : 'Fr';
+            const output = document.getElementById(`presentationOutput${suffix}`);
+            const range = document.createRange();
+            range.selectNode(output);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+            
+            const message = language === 'english'
+                ? 'PowerPoint prompt copied to clipboard!'
+                : 'Invite PowerPoint copiée dans le presse-papiers !';
+            showStatus(`presentationStatus${suffix}`, message, 'success');
+        }
+
+        function resetPresentationPrompt(language) {
+            const suffix = language === 'english' ? 'En' : 'Fr';
+            document.getElementById(`presentationOutput${suffix}`).innerHTML = '';
+            document.getElementById(`presentationResult${suffix}`).style.display = 'none';
+            
+            const message = language === 'english'
+                ? 'PowerPoint prompt reset successfully!'
+                : 'Invite PowerPoint réinitialisée avec succès !';
+            showStatus(`presentationStatus${suffix}`, message, 'success');
+        }
+
+        // File Input Handlers
+        document.addEventListener('DOMContentLoaded', function() {
+            // English file input
+            document.getElementById('presentationFileEn').addEventListener('change', function() {
+                const statusElement = document.getElementById('presentationFileStatusEn');
+                if (this.files.length > 0) {
+                    statusElement.textContent = this.files[0].name;
+                } else {
+                    statusElement.textContent = 'No file selected';
+                }
+            });
+
+            // French file input
+            document.getElementById('presentationFileFr').addEventListener('change', function() {
+                const statusElement = document.getElementById('presentationFileStatusFr');
+                if (this.files.length > 0) {
+                    statusElement.textContent = this.files[0].name;
+                } else {
+                    statusElement.textContent = 'Aucun fichier sélectionné';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
