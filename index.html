@@ -148,7 +148,7 @@
                             
                             <h4 class="font-semibold mb-2">How to Use:</h4>
                             <ol class="list-decimal list-inside text-gray-600 space-y-1">
-                                <li>Enter your dissertation title and field of specialization</li>
+                                <li>Enter your thesis file name</li>
                                 <li>Add any specific notes or instructions</li>
                                 <li>Click "Generate Speech" to create your customized defense script</li>
                                 <li>Copy the result to use with your presentation</li>
@@ -156,18 +156,18 @@
                         </div>
                         
                         <div class="space-y-6">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Dissertation Title:</label>
-                                <input type="text" id="speechTitleEn" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your dissertation title...">
+                            <div class="space-y-2">
+                                <label class="block text-sm font-medium text-gray-700">Upload Thesis File:</label>
+                                <div class="flex items-center space-x-4">
+                                    <label class="cursor-pointer bg-white border border-gray-300 rounded-md px-4 py-2 hover:bg-gray-50 transition-colors">
+                                        <i class="fas fa-upload mr-2"></i>Choose File
+                                        <input type="file" id="speechThesisFileEn" class="hidden" accept=".pdf,.doc,.docx">
+                                    </label>
+                                    <span id="thesisFileNameEn" class="text-sm text-gray-500 truncate max-w-xs">No file selected</span>
+                                </div>
                             </div>
-                            
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Field of Specialization:</label>
-                                <input type="text" id="speechFieldEn" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your field of specialization...">
-                            </div>
-                            
 
-                            <button onclick="generateSpeechPrompt('english')" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                            <button onclick="generateSpeechPrompt('english')" class="w-full sm:w-auto bg-blue-500 hover:bg-blue-600 text-white px-4 sm:px-6 py-3 rounded-lg font-medium transition-colors">
                                 <i class="fas fa-magic mr-2"></i>Generate Speech
                             </button>
                             
@@ -201,7 +201,7 @@
                             
                             <h4 class="font-semibold mb-2">Comment utiliser :</h4>
                             <ol class="list-decimal list-inside text-gray-600 space-y-1">
-                                <li>Entrez le titre de votre thèse et votre domaine de spécialisation</li>
+                                <li>Entrez le nom du fichier de votre thèse</li>
                                 <li>Ajoutez des notes ou instructions spécifiques</li>
                                 <li>Cliquez sur "Générer le Discours" pour créer votre script de défense personnalisé</li>
                                 <li>Copiez le résultat pour l'utiliser avec votre présentation</li>
@@ -209,18 +209,18 @@
                         </div>
                         
                         <div class="space-y-6">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Titre de la Thèse:</label>
-                                <input type="text" id="speechTitleFr" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Entrez le titre de votre thèse...">
+                            <div class="space-y-2">
+                                <label class="block text-sm font-medium text-gray-700">Téléverser le Fichier de Thèse :</label>
+                                <div class="flex items-center space-x-4">
+                                    <label class="cursor-pointer bg-white border border-gray-300 rounded-md px-4 py-2 hover:bg-gray-50 transition-colors">
+                                        <i class="fas fa-upload mr-2"></i>Choisir un Fichier
+                                        <input type="file" id="speechThesisFileFr" class="hidden" accept=".pdf,.doc,.docx">
+                                    </label>
+                                    <span id="thesisFileNameFr" class="text-sm text-gray-500 truncate max-w-xs">Aucun fichier sélectionné</span>
+                                </div>
                             </div>
-                            
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Domaine de Spécialisation:</label>
-                                <input type="text" id="speechFieldFr" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Entrez votre domaine de spécialisation...">
-                            </div>
-                            
 
-                            <button onclick="generateSpeechPrompt('french')" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                            <button onclick="generateSpeechPrompt('french')" class="w-full sm:w-auto bg-blue-500 hover:bg-blue-600 text-white px-4 sm:px-6 py-3 rounded-lg font-medium transition-colors">
                                 <i class="fas fa-magic mr-2"></i>Générer le Discours
                             </button>
                             
@@ -395,19 +395,20 @@
         const speechTemplates = {
             english: `Act like an expert in scientific communication and academic speech writing, specializing in preparing impactful, clear, and persuasive oral defenses for PhD dissertations. You are known for crafting compelling and structured presentations tailored to academic juries, turning complex research into engaging and understandable narratives.
 
-Objective: Based on my PhD dissertation titled "{{TITLE}}", in the field of "{{FIELD}}", your task is to create a comprehensive oral defense speech to accompany each PowerPoint slide of the presentation.
-Follow these steps:
-1. For each chapter or major section of the dissertation:
-   - Analyze the content and extract the essential ideas.
-   - Break it down into logical slides based on conventional defense structures.
+Objective: The attached file [{{FILENAME}}] is my dissertation. Based on its content, your task is to prepare a comprehensive oral defense speech that will accompany each PowerPoint slide in the presentation. Proceed as follows:
 
-2. For each slide, provide:
-   -📌 Slide content: a bullet-point list summarizing the key ideas, experimental results, essential data, and partial conclusions.
-   -🗣️ Associated speech: a fluent, academic, and persuasive script that elaborates on the bullet points and explains the scientific reasoning clearly and confidently.
-   -🔁 Slide transition: a transitional sentence to ensure smooth logical flow between sections.
+For each chapter or major section of the dissertation:
+1. Analyze the content and extract the essential ideas.
+2. Divide it into a logical series of slides, following the typical structure of a PhD defense.
 
-3. At the end of each chapter or section:
-   - Ask me whether I want to proceed to the next section or make edits before continuing.
+For each slide, provide:
+
+📌 Slide content: a bullet-point list summarizing the key concepts, results, essential data, and partial conclusions.
+🗣️ Associated speech: a fluent, academic, and persuasive script that expands on the bullet points and clearly communicates the scientific reasoning.
+🔁 Slide transition: a smooth, logically connected sentence to bridge to the next slide or section.
+
+At the end of each chapter or major section:
+- Prompt me to confirm whether I want to proceed to the next part or make revisions before continuing.
 
 Expected output format:
 --------------------------------------
@@ -418,43 +419,43 @@ Slide X: [Slide title]
 • Key idea 3
 • Partial conclusion
 🗣️ Associated speech:
-Fluent and structured academic text expanding on each bullet point with clarity, scientific rigor, and rhetorical engagement.
+A fluent and well-structured academic text that expands on each point with clarity, scientific rigor, and rhetorical engagement.
 🔁 Transition:
-Transition sentence to the next slide or topic.
+A transition sentence introducing the next slide or topic.
 
-Work with rigor, clarity, and attention to detail. Maintain an academic tone while ensuring accessibility. Be methodical and highly precise at each step.`,
+Please work with rigor, clarity, and attention to detail. Maintain an academic tone while ensuring accessibility. Be methodical and highly precise at each step.`,
 
-            french: `Agis comme un expert en communication scientifique, spécialisé dans la rédaction de discours académiques pour les soutenances de thèse. Tu es reconnu pour ta capacité à transformer des thèses complexes en discours fluides, structurés et convaincants, adaptés à un jury académique. Ton style oral est clair, rigoureux, captivant, et parfaitement adapté au format académique.
+    french: `Agis comme un expert en communication scientifique et en rédaction de discours académiques, spécialisé dans la préparation de soutenances de thèse percutantes, claires et convaincantes. Tu es reconnu pour concevoir des présentations structurées et engageantes, adaptées aux jurys universitaires, et pour transformer des recherches complexes en récits accessibles et captivants.
 
-Objectif : À partir de ma thèse de doctorat intitulée "{{TITLE}}" dans le domaine suivant : {{FIELD}}, ta mission est de créer un discours complet de soutenance qui accompagne chaque diapositive de la présentation PowerPoint.
+Objectif : Le fichier joint [{{FILENAME}}] est ma thèse de doctorat. À partir de son contenu, ta mission est de préparer un discours complet de soutenance qui accompagnera chaque diapositive du PowerPoint. Procède comme suit :
 
-Procède selon les étapes suivantes :
-1. Pour chaque chapitre ou section de la thèse :
-   - Analyse le contenu du chapitre pour en extraire les points clés.
-   - Découpe ce contenu en plusieurs diapositives logiques selon la structure habituelle d'une soutenance.
+Pour chaque chapitre ou grande section de la thèse :
+1. Analyse le contenu et identifie les idées essentielles.
+2. Découpe-le en une série logique de diapositives, en suivant la structure classique d'une soutenance de doctorat.
 
-2. Pour chaque diapositive, fournis :
-   - 📌 Contenu affiché sur la diapositive : une synthèse des éléments clés sous forme de liste à puces (idées principales, résultats, données expérimentales, conclusion partielle).
-   - 🗣️ Discours oral associé : un texte rédigé de manière fluide, académique, convaincante, qui explique les points de la diapositive avec rigueur et engagement.
-   - 🔁 Transition vers la diapositive suivante : une phrase de transition logique qui assure la fluidité du discours.
+Pour chaque diapositive, fournis :
 
-3. À la fin de chaque chapitre ou grande section :
-   - Demande-moi si je souhaite continuer avec la section suivante, ou apporter des ajustements avant de poursuivre.
+📌 Contenu de la diapositive : une liste à puces résumant les idées clés, les résultats expérimentaux, les données essentielles et les conclusions partielles.
+🗣️ Discours associé : un texte fluide, académique et persuasif, développant les points de la diapositive tout en expliquant le raisonnement scientifique avec clarté et assurance.
+🔁 Transition : une phrase de transition pour assurer une continuité logique fluide vers la diapositive ou la section suivante.
+
+À la fin de chaque chapitre ou section importante :
+- Demande-moi si je souhaite passer à la suite ou apporter des modifications avant de continuer.
 
 Format de sortie attendu :
 --------------------------------------
 Diapositive X : [Titre de la diapositive]
-📌 Contenu affiché sur la diapositive :
-• Point clé 1
-• Point clé 2
-• Point clé 2
+📌 Contenu de la diapositive :
+• Idée clé 1
+• Idée clé 2
+• Idée clé 3
 • Conclusion partielle
-🗣️ Discours oral associé :
-Texte fluide du discours expliquant chaque élément affiché, avec clarté, rigueur scientifique et engagement oratoire.
+🗣️ Discours associé :
+Un texte académique fluide et structuré, développant chaque point avec rigueur scientifique, clarté et sens pédagogique.
 🔁 Transition :
-Phrase de transition vers la prochaine section.
+Une phrase de transition introduisant la diapositive ou le thème suivant.
 
-Travaille de manière rigoureuse, structurée et détaillée. Utilise un ton académique soutenu, mais accessible. Sois méthodique et pertinent à chaque étape.`
+Travaille avec rigueur, précision et souci du détail. Maintiens un ton académique tout en assurant une accessibilité maximale. Sois méthodique à chaque étape.`
         };
 
         // Presentation Templates
@@ -567,27 +568,39 @@ Une fois la présentation terminée, exportez le résultat au format PowerPoint 
             }, 4000);
         }
 
+        // File Input Handlers
+        document.addEventListener('DOMContentLoaded', function() {
+            // English file input
+            document.getElementById('speechThesisFileEn').addEventListener('change', function(e) {
+                const fileName = this.files.length ? this.files[0].name : 'No file selected';
+                document.getElementById('thesisFileNameEn').textContent = fileName;
+            });
+
+            // French file input
+            document.getElementById('speechThesisFileFr').addEventListener('change', function(e) {
+                const fileName = this.files.length ? this.files[0].name : 'Aucun fichier sélectionné';
+                document.getElementById('thesisFileNameFr').textContent = fileName;
+            });
+        });
+
         // Speech Generation Functions
         function generateSpeechPrompt(language) {
             const suffix = language === 'english' ? 'En' : 'Fr';
-            const title = document.getElementById(`speechTitle${suffix}`).value.trim();
-            const field = document.getElementById(`speechField${suffix}`).value.trim();
+            const fileInput = document.getElementById(`speechThesisFile${suffix}`);
             
-            if (!title || !field) {
+            if (!fileInput.files || !fileInput.files[0]) {
                 const message = language === 'english' 
-                    ? 'Please fill in both the dissertation title and field of specialization.'
-                    : 'Veuillez remplir le titre de la thèse et le domaine de spécialisation.';
+                    ? 'Please select a thesis file.'
+                    : 'Veuillez sélectionner un fichier de thèse.';
                 showStatus(`speechStatus${suffix}`, message, 'error');
                 return;
             }
             
+            const thesisFile = fileInput.files[0].name;
             let template = speechTemplates[language];
-            const styledTitle = `<span class="user-input">${title}</span>`;
-            const styledField = `<span class="user-input">${field}</span>`;
+            const styledThesisFile = `<span class="user-input">${thesisFile}</span>`;
             
-            template = template.replace('{{TITLE}}', styledTitle);
-            template = template.replace('{{FIELD}}', styledField);
-            template = template.replace('{{NOTES}}', '');
+            template = template.replace('{{FILENAME}}', styledThesisFile);
             
             const outputElement = document.getElementById(`speechOutput${suffix}`);
             outputElement.innerHTML = `<div class="prompt-text">${template}</div>`;
@@ -617,6 +630,16 @@ Une fois la présentation terminée, exportez le résultat au format PowerPoint 
 
         function resetSpeechPrompt(language) {
             const suffix = language === 'english' ? 'En' : 'Fr';
+            const fileInput = document.getElementById(`speechThesisFile${suffix}`);
+            
+            // Reset file input
+            fileInput.value = '';
+            
+            // Reset filename display
+            const noFileText = language === 'english' ? 'No file selected' : 'Aucun fichier sélectionné';
+            document.getElementById(`thesisFileName${suffix}`).textContent = noFileText;
+            
+            // Clear output
             document.getElementById(`speechOutput${suffix}`).innerHTML = '';
             document.getElementById(`speechResult${suffix}`).style.display = 'none';
             
